@@ -1,0 +1,22 @@
+{
+  "name": "projeto-backend",
+  "version": "1.0.0",
+  "description": "API para sistema de monitoramento de qualidade da água.",
+  "main": "server.js",
+  "repository": "https://github.com/resndph/projeto-trainee-backend.git",
+  "author": "Pedro H Fonseca",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "express": "^5.1.0",
+    "sequelize": "^6.37.7"
+  },
+  "scripts": {
+  "dev": "nodemon src/server.js"
+  },
+  "devDependencies": {
+    "dotenv": "^17.2.3",
+    "nodemon": "^3.1.10",
+    "sequelize-cli": "^6.6.3"
+  }
+}
