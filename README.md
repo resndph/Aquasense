@@ -51,6 +51,11 @@ As tabelas foram criadas a partir do modelo entidade-relacionamento (ER) definid
 
 Essas migrations implementam as relações e restrições de integridade descritas no diagrama ER.
 
+## 🗃️ Models e Estrutura do Banco
+
+Após a criação das migrations, foram implementados todos os **models** do sistema no Sequelize, refletindo as tabelas existentes no banco de dados relacional.  
+Foram também definidas as **relações** entre as entidades utilizando os métodos `hasOne`, `belongsTo`, `hasMany` e `belongsToMany`, espelhando as chaves estrangeiras e associações da modelagem original.
+
 ## 🚀 Comandos para Executar o Projeto Localmente
 
 Abaixo estão todos os comandos necessários para configurar o ambiente, criar o banco de dados, rodar as migrations e iniciar o servidor localmente.
