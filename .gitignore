@@ -6,3 +6,6 @@ node_modules/
 
 # IDEs
 .vscode/
+
+# Docker
+docker/mysql_data/
