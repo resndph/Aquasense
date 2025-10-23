@@ -12,8 +12,8 @@ Foi dai que defini o conceito deste projeto: um sistema de monitoramento intelig
 O projeto visa desenvolver um sistema automatizado para monitorar a qualidade da água
 em estações de coleta, gerenciadas por técnicos e pesquisadores.
 
-Nesta primeira etapa, será criada a estrutura inicial do projeto Node.js,
-configurado o banco de dados com Sequelize e implementada a containerização com Docker.
+Nesta primeira etapa, foi criada a estrutura inicial do projeto em Node.js,
+configurado o banco de dados com Sequelize e implementada a containerização com Docker (API + MySQL em containers separados).
 
 ## ⚙️ Configuração do Sequelize
 
@@ -55,6 +55,45 @@ Essas migrations implementam as relações e restrições de integridade descrit
 
 Após a criação das migrations, foram implementados todos os **models** do sistema no Sequelize, refletindo as tabelas existentes no banco de dados relacional.  
 Foram também definidas as **relações** entre as entidades utilizando os métodos `hasOne`, `belongsTo`, `hasMany` e `belongsToMany`, espelhando as chaves estrangeiras e associações da modelagem original.
+
+## 🐳 Executando com Docker
+
+Esta aplicação está containerizada com **Docker Compose**, subindo **dois serviços**:
+
+- `apicontainer` → container Node.js (Express + Sequelize)
+- `mysqlcontainer` → container MySQL 8.0
+
+### 🔧 Pré-requisitos
+
+- Docker e Docker Compose instalados
+
+### 🧩 Variáveis de ambiente para Docker
+
+No ambiente Docker, o host do banco deve ser **`DB_HOST=mysqlcontainer`** (nome do serviço do MySQL no `docker-compose.yml`).  
+Exemplo de `.env` compatível com Docker:
+
+```env
+PORT=3000
+DB_USER=root
+DB_PASSWORD=root
+DB_NAME=db_monitoramento
+DB_HOST=mysqlcontainer
+DB_PORT=3306
+DB_DIALECT=mysql
+```
+
+### ▶️ Subindo os containers
+
+Para iniciar o sistema completo (API + Banco de Dados), execute o comando abaixo na raiz do projeto:
+
+```env
+docker compose up --build
+```
+
+Esse comando, constrói a imagem da API, inicia o container do Node.js e o container do MySQL. Alem de criar automaticamente o banco de dados, aplicar todas as migrations e iniciar o servidor na porta 3000.
+
+Não é necessário rodar manualmente os comandos yarn sequelize db:create nem yarn sequelize db:migrate.
+Todo o processo é automatizado quando os containers sobem.
 
 ## 🚀 Comandos para Executar o Projeto Localmente
 
