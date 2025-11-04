@@ -4,7 +4,11 @@ class Alerta extends Model {
   static init(sequelize) {
     super.init(
       {
-        id_alerta: { type: DataTypes.INTEGER, primaryKey: true },
+        id_alerta: {
+          type: DataTypes.INTEGER,
+          primaryKey: true,
+          autoIncrement: true,
+        },
         leitura_causa: DataTypes.INTEGER,
         tipo_alerta: DataTypes.STRING(80),
         nivel_severidade: {

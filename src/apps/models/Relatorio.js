@@ -4,7 +4,11 @@ class Relatorio extends Model {
   static init(sequelize) {
     super.init(
       {
-        id_relatorio: { type: DataTypes.INTEGER, primaryKey: true },
+        id_relatorio: {
+          type: DataTypes.INTEGER,
+          primaryKey: true,
+          autoIncrement: true,
+        },
         pesquisador_resp: DataTypes.INTEGER,
         alerta_analisado: DataTypes.INTEGER,
         titulo: DataTypes.STRING(100),

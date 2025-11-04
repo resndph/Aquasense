@@ -4,7 +4,11 @@ class AcaoCorretiva extends Model {
   static init(sequelize) {
     super.init(
       {
-        id_acao: { type: DataTypes.INTEGER, primaryKey: true },
+        id_acao: {
+          type: DataTypes.INTEGER,
+          primaryKey: true,
+          autoIncrement: true,
+        },
         relatorio_autor: DataTypes.INTEGER,
         descricao_acao: DataTypes.TEXT,
         status_acao: {

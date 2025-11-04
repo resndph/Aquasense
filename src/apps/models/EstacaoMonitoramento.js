@@ -4,7 +4,11 @@ class EstacaoMonitoramento extends Model {
   static init(sequelize) {
     super.init(
       {
-        id_estacao: { type: DataTypes.INTEGER, primaryKey: true },
+        id_estacao: {
+          type: DataTypes.INTEGER,
+          primaryKey: true,
+          autoIncrement: true,
+        },
         nome_estacao: DataTypes.STRING(100),
         cep: DataTypes.STRING(9),
         logradouro: DataTypes.STRING(100),

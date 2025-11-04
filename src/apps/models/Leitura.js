@@ -4,7 +4,11 @@ class Leitura extends Model {
   static init(sequelize) {
     super.init(
       {
-        id_leitura: { type: DataTypes.INTEGER, primaryKey: true },
+        id_leitura: {
+          type: DataTypes.INTEGER,
+          primaryKey: true,
+          autoIncrement: true,
+        },
         id_sensor_autor: DataTypes.INTEGER,
         limite: DataTypes.FLOAT,
         valor: DataTypes.FLOAT,

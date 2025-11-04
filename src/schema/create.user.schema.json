@@ -1,0 +1,85 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "CreateUserSchema",
+  "title": "CreateUserSchema",
+  "type": "object",
+  "properties": {
+    "nome": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 100
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "maxLength": 150
+    },
+    "password": {
+      "type": "string",
+      "minLength": 6,
+      "maxLength": 50
+    },
+    "telefone": {
+      "type": "string",
+      "pattern": "^[0-9]{8,20}$"
+    },
+    "area_atuacao": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "instituicao_vinculo": {
+      "type": "string",
+      "maxLength": 150
+    },
+    "nivel_formacao": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "especializacao": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "disponibilidade": {
+      "type": "string",
+      "enum": ["Integral", "Parcial", "Indisponível"]
+    },
+    "registro_profissional": {
+      "type": "string",
+      "maxLength": 50
+    }
+  },
+  "required": ["nome", "email", "password"],
+  "additionalProperties": false,
+
+  "oneOf": [
+    {
+      "description": "Usuário comum (nenhum campo técnico/pesquisador)",
+      "not": {
+        "anyOf": [
+          { "required": ["area_atuacao"] },
+          { "required": ["especializacao"] }
+        ]
+      }
+    },
+    {
+      "description": "Pesquisador",
+      "required": ["area_atuacao", "instituicao_vinculo", "nivel_formacao"],
+      "not": {
+        "anyOf": [
+          { "required": ["especializacao"] },
+          { "required": ["registro_profissional"] }
+        ]
+      }
+    },
+    {
+      "description": "Técnico",
+      "required": ["especializacao", "disponibilidade", "registro_profissional"],
+      "not": {
+        "anyOf": [
+          { "required": ["area_atuacao"] },
+          { "required": ["instituicao_vinculo"] }
+        ]
+      }
+    }
+  ]
+}

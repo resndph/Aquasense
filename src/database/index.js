@@ -47,7 +47,6 @@ class Database {
         define: dbConfig.define,
       }
     );
-    console.log(models);
     models.map((model) => model.init(this.connection));
     models.map(
       (model) => model.associate && model.associate(this.connection.models)

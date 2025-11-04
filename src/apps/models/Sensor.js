@@ -4,7 +4,11 @@ class Sensor extends Model {
   static init(sequelize) {
     super.init(
       {
-        id_sensor: { type: DataTypes.INTEGER, primaryKey: true },
+        id_sensor: {
+          type: DataTypes.INTEGER,
+          primaryKey: true,
+          autoIncrement: true,
+        },
         id_estacao_situado: DataTypes.INTEGER,
         tipo: DataTypes.STRING(50),
         unidade_medida: DataTypes.STRING(20),
