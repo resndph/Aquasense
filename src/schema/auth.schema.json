@@ -1,0 +1,27 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Auth",
+    "type": "object",
+    "properties": {
+        "nome": {
+        "type": "string",
+        "minLength": 3,
+        "maxLength": 100,
+        "description": "Nome completo do usuário"
+        },
+        "email": {
+        "type": "string",
+        "format": "email",
+        "maxLength": 120,
+        "description": "Endereço de e-mail válido e único"
+        },
+        "password": {
+        "type": "string",
+        "minLength": 6,
+        "maxLength": 50,
+        "description": "Senha do usuário"
+        }
+    },
+    "required": ["password"],
+    "additionalProperties": false
+}

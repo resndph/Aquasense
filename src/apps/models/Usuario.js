@@ -35,6 +35,11 @@ class Usuario extends Model {
     });
     return this;
   }
+
+  checkPassword(password) {
+    return bcryptjs.compare(password, this.senha_hash);
+  }
+
   static associate(models) {
     this.hasMany(models.TelefoneContato, {
       foreignKey: "id_usuario",

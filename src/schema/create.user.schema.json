@@ -1,6 +1,5 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "$id": "CreateUserSchema",
   "title": "CreateUserSchema",
   "type": "object",
   "properties": {
