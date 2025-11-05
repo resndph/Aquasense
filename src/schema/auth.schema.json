@@ -6,20 +6,17 @@
         "nome": {
         "type": "string",
         "minLength": 3,
-        "maxLength": 100,
-        "description": "Nome completo do usuário"
+        "maxLength": 100
         },
         "email": {
         "type": "string",
         "format": "email",
-        "maxLength": 120,
-        "description": "Endereço de e-mail válido e único"
+        "maxLength": 120
         },
         "password": {
         "type": "string",
         "minLength": 6,
-        "maxLength": 50,
-        "description": "Senha do usuário"
+        "maxLength": 50
         }
     },
     "required": ["password"],

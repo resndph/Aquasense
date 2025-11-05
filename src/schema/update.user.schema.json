@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "UpdateUser",
+  "type": "object",
+  "properties": {
+    "nome": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 100
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "maxLength": 120
+    },
+    "old_password": {
+      "type": "string",
+      "minLength": 6,
+      "maxLength": 50
+    },
+    "new_password": {
+      "type": "string",
+      "minLength": 6,
+      "maxLength": 50
+    },
+    "confirm_password": {
+      "type": "string",
+      "minLength": 6,
+      "maxLength": 50
+    },
+    "telefone": {
+      "type": "string",
+      "pattern": "^[0-9]{8,20}$"
+    },
+    "id_telefone": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "especializacao": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "disponibilidade": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "registro_profissional": {
+      "type": "string",
+      "maxLength": 50
+    },
+    "area_atuacao": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "instituicao_vinculo": {
+      "type": "string",
+      "maxLength": 150
+    },
+    "nivel_formacao": {
+      "type": "string",
+      "maxLength": 100
+    }
+  },
+  "additionalProperties": false
+}
