@@ -9,6 +9,7 @@ const UserControllers = require("./apps/controllers/UserControllers");
 const authSchema = require("./schema/auth.schema.json");
 const updateSchema = require("./schema/update.user.schema.json");
 const userSchema = require("./schema/create.user.schema.json");
+const isAdmin = require("./apps/middlewares/isAdmin");
 
 const routes = new Router();
 
@@ -27,5 +28,7 @@ routes.get("/health", (req, res) => {
 routes.use(AuthenticationMiddleware);
 
 routes.put("/users", schemaValidator(updateSchema), UserControllers.update);
+
+routes.put("/admin/users/:id", isAdmin, UserControllers.update);
 
 module.exports = routes;

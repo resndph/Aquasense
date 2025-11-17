@@ -33,6 +33,13 @@ module.exports = {
           notEmpty: true,
         },
       },
+      limite: {
+        type: Sequelize.FLOAT,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
       status_sensor: {
         type: Sequelize.ENUM("Ativo", "Inativo", "Em manutenção"),
         allowNull: false,

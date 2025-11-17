@@ -10,12 +10,26 @@ class UserControllers {
   async create(req, res) {
     const transaction = await sequelize.transaction();
     try {
+      const loggedUserRole = req.userRole;
+
+      if ("role" in req.body) {
+        if (req.body.role !== "usuario" && loggedUserRole !== "admin") {
+          await transaction.rollback();
+          return res.status(403).json({
+            message: "Você não tem permissão para criar um administrador.",
+          });
+        }
+      } else {
+        req.body.role = "usuario";
+      }
+
       const verifyusuario = await Usuario.findOne({
         where: { email: req.body.email },
         transaction,
       });
 
       if (verifyusuario) {
+        await transaction.rollback();
         return res.status(400).send({ message: "E-mail já cadastrado!" });
       }
 
@@ -94,10 +108,32 @@ class UserControllers {
         area_atuacao,
         instituicao_vinculo,
         nivel_formacao,
+        role,
       } = req.body;
 
+      const targetUserId = req.userRole === "admin" ? req.params.id : req.newId;
+      const loggedUserRole = req.userRole;
+
+      if (role && loggedUserRole !== "admin") {
+        await transaction.rollback();
+        return res.status(403).json({
+          message: "Você não tem permissão para alterar privilégios.",
+        });
+      }
+
+      if (
+        loggedUserRole === "admin" &&
+        req.newId == targetUserId &&
+        role === "usuario"
+      ) {
+        await transaction.rollback();
+        return res.status(403).json({
+          message: "Um administrador não pode remover seu próprio privilégio.",
+        });
+      }
+
       const usuario = await Usuario.findOne({
-        where: { id_usuario: req.newId },
+        where: { id_usuario: targetUserId },
         include: [
           { model: Pesquisador, as: "pesquisador" },
           { model: Tecnico, as: "tecnico" },
@@ -105,6 +141,12 @@ class UserControllers {
         ],
         transaction,
       });
+
+      if (!usuario) {
+        await transaction.rollback();
+        return res.status(404).send({ message: "Usuário não encontrado." });
+      }
+
       const CamposPesquisador =
         area_atuacao || instituicao_vinculo || nivel_formacao;
 
@@ -112,32 +154,45 @@ class UserControllers {
         especializacao || disponibilidade || registro_profissional;
 
       if (usuario.tecnico && CamposPesquisador) {
+        await transaction.rollback();
         return res.status(400).send({
           message: "Usuário técnico não pode atualizar campos de pesquisador.",
         });
       }
 
       if (usuario.pesquisador && CamposTecnico) {
+        await transaction.rollback();
         return res.status(400).send({
           message: "Usuário pesquisador não pode atualizar campos de técnico.",
         });
       }
-      if (!usuario) {
-        return res.status(404).send({ message: "Usuário não encontrado." });
+
+      if (
+        usuario.role === "admin" &&
+        role === "usuario" &&
+        req.newId !== targetUserId
+      ) {
+        await transaction.rollback();
+        return res.status(403).json({
+          message: "Você não pode rebaixar outro administrador.",
+        });
       }
 
       let encryptedPassword = "";
 
       if (old_password) {
         if (!(await usuario.checkPassword(old_password))) {
+          await transaction.rollback();
           return res.status(401).send({ message: "Senha antiga incorreta." });
         }
         if (!new_password || !confirm_password) {
+          await transaction.rollback();
           return res
             .status(400)
             .send({ message: "Nova senha e confirmação são obrigatórias." });
         }
         if (new_password !== confirm_password) {
+          await transaction.rollback();
           return res
             .status(400)
             .send({ message: "Nova senha e confirmação não coincidem." });
@@ -149,18 +204,19 @@ class UserControllers {
           nome: nome || usuario.nome,
           email: email || usuario.email,
           senha_hash: encryptedPassword || usuario.senha_hash,
+          role: role ?? usuario.role,
         },
-        { where: { id_usuario: req.newId }, transaction }
+        { where: { id_usuario: targetUserId }, transaction }
       );
       if (telefone) {
         if (id_telefone) {
           await TelefoneContato.update(
             { telefone_contato: telefone },
-            { where: { id_telefone, id_usuario: req.newId }, transaction }
+            { where: { id_telefone, id_usuario: targetUserId }, transaction }
           );
         } else {
           await TelefoneContato.create(
-            { id_usuario: req.newId, telefone_contato: telefone },
+            { id_usuario: targetUserId, telefone_contato: telefone },
             { transaction }
           );
         }
@@ -174,7 +230,7 @@ class UserControllers {
               registro_profissional || usuario.tecnico.registro_profissional,
           },
           {
-            where: { id_usuario: req.newId },
+            where: { id_usuario: targetUserId },
             transaction,
           }
         );
@@ -188,7 +244,7 @@ class UserControllers {
               nivel_formacao || usuario.pesquisador.nivel_formacao,
           },
           {
-            where: { id_usuario: req.newId },
+            where: { id_usuario: targetUserId },
             transaction,
           }
         );

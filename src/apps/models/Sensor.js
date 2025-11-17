@@ -12,6 +12,7 @@ class Sensor extends Model {
         id_estacao_situado: DataTypes.INTEGER,
         tipo: DataTypes.STRING(50),
         unidade_medida: DataTypes.STRING(20),
+        limite: DataTypes.FLOAT,
         status_sensor: {
           type: DataTypes.ENUM("Ativo", "Inativo", "Em manutenção"),
           defaultValue: "Ativo",

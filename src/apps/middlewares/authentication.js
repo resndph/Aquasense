@@ -9,8 +9,10 @@ const verifyJwt = async (req, res, next) => {
   }
 
   try {
-    const { newId } = await decryptedToken(authHeader);
+    const decoded = await decryptedToken(authHeader);
+    const { newId, role } = decoded;
     req.newId = parseInt(decrypt(newId));
+    req.userRole = role || "usuario";
 
     return next();
   } catch (error) {

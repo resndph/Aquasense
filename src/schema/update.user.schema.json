@@ -59,6 +59,10 @@
     "nivel_formacao": {
       "type": "string",
       "maxLength": 100
+    },
+    "role": {
+      "type": "string",
+      "enum": ["usuario", "admin"]
     }
   },
   "additionalProperties": false

@@ -10,7 +10,6 @@ class Leitura extends Model {
           autoIncrement: true,
         },
         id_sensor_autor: DataTypes.INTEGER,
-        limite: DataTypes.FLOAT,
         valor: DataTypes.FLOAT,
         data_hora: {
           type: DataTypes.DATE,

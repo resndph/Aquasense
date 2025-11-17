@@ -26,13 +26,13 @@ class AuthenticationController {
     if (!(await user.checkPassword(password))) {
       return res.status(401).json({ error: "Senha não está correta!" });
     }
-    const { id_usuario, nome: Nome } = user;
+    const { id_usuario, nome: Nome, role } = user;
 
     const { iv, content } = encrypt(id_usuario);
 
     const newId = `${iv}:${content}`;
 
-    const token = jwt.sign({ newId }, process.env.HASH_BCRYPT, {
+    const token = jwt.sign({ newId, role }, process.env.HASH_BCRYPT, {
       expiresIn: process.env.EXPIRATION_TOKEN,
     });
 

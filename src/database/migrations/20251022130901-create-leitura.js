@@ -19,13 +19,6 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "RESTRICT",
       },
-      limite: {
-        type: Sequelize.FLOAT,
-        allowNull: false,
-        validate: {
-          notEmpty: true,
-        },
-      },
       valor: {
         type: Sequelize.FLOAT,
         allowNull: false,

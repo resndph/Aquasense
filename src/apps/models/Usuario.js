@@ -14,9 +14,14 @@ class Usuario extends Model {
         senha_hash: DataTypes.STRING,
         email: DataTypes.STRING(150),
         password: DataTypes.VIRTUAL,
+        role: {
+          type: DataTypes.ENUM("usuario", "admin"),
+          defaultValue: "usuario",
+        },
         tipo: {
           type: DataTypes.VIRTUAL,
           get() {
+            if (this.role === "admin") return "admin";
             if (this.pesquisador) return "pesquisador";
             if (this.tecnico) return "tecnico";
             return "usuario";
