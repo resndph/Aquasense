@@ -45,6 +45,10 @@
     "registro_profissional": {
       "type": "string",
       "maxLength": 50
+    },
+    "role": {
+      "type": "string",
+      "enum": ["usuario", "admin"]
     }
   },
   "required": ["nome", "email", "password"],

@@ -45,8 +45,6 @@ class UserControllers {
         req.body.registro_profissional ||
         req.body.disponibilidade;
 
-      let tipo = "usuario";
-
       if (isPesquisador) {
         await Pesquisador.create(
           {
@@ -57,7 +55,6 @@ class UserControllers {
           },
           { transaction }
         );
-        tipo = "pesquisador";
       } else if (isTecnico) {
         await Tecnico.create(
           {
@@ -68,7 +65,6 @@ class UserControllers {
           },
           { transaction }
         );
-        tipo = "tecnico";
       }
 
       if (req.body.telefone) {
@@ -111,7 +107,7 @@ class UserControllers {
         role,
       } = req.body;
 
-      const targetUserId = req.userRole === "admin" ? req.params.id : req.newId;
+      const targetUserId = req.params.id || req.newId;
       const loggedUserRole = req.userRole;
 
       if (role && loggedUserRole !== "admin") {
@@ -249,7 +245,7 @@ class UserControllers {
           }
         );
       }
-
+      await usuario.reload();
       await transaction.commit();
       return res
         .status(200)
@@ -258,6 +254,83 @@ class UserControllers {
       await transaction.rollback();
       console.error(error);
       return res.status(500).send({ error: "Erro ao atualizar usuário." });
+    }
+  }
+
+  async index(req, res) {
+    try {
+      const usuarios = await Usuario.findAll({
+        attributes: { exclude: ["senha_hash"] },
+        include: [
+          { model: Pesquisador, as: "pesquisador" },
+          { model: Tecnico, as: "tecnico" },
+          { model: TelefoneContato, as: "telefones" },
+        ],
+      });
+      return res.status(200).json(usuarios);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ error: "Erro ao buscar usuários." });
+    }
+  }
+
+  async show(req, res) {
+    try {
+      const targetUserId = req.params.id || req.newId;
+
+      const usuario = await Usuario.findOne({
+        where: { id_usuario: targetUserId },
+        attributes: { exclude: ["senha_hash"] },
+        include: [
+          { model: Pesquisador, as: "pesquisador" },
+          { model: Tecnico, as: "tecnico" },
+          { model: TelefoneContato, as: "telefones" },
+        ],
+      });
+
+      if (!usuario) {
+        return res.status(404).send({ message: "Usuário não encontrado." });
+      }
+
+      return res.status(200).json(usuario);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ error: "Erro ao buscar usuário." });
+    }
+  }
+
+  async delete(req, res) {
+    const transaction = await sequelize.transaction();
+    try {
+      const targetUserId = req.params.id;
+      
+      if (req.newId == targetUserId) {
+        await transaction.rollback();
+        return res.status(403).json({
+          message: "Um administrador não pode deletar seu próprio usuário.",
+        });
+      }
+
+      const usuario = await Usuario.findOne({
+        where: { id_usuario: targetUserId },
+        transaction,
+      });
+
+      if (!usuario) {
+        await transaction.rollback();
+        return res.status(404).send({ message: "Usuário não encontrado." });
+      }
+
+      await Usuario.destroy({ where: { id_usuario: targetUserId }, transaction });
+
+      await transaction.commit();
+      return res
+        .status(200)
+        .send({ message: "Usuário deletado com sucesso!" });
+    } catch (error) {
+      await transaction.rollback();
+      console.error(error);
+      return res.status(500).send({ error: "Erro ao deletar usuário." });
     }
   }
 }

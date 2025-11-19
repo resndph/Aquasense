@@ -21,7 +21,6 @@ class Usuario extends Model {
         tipo: {
           type: DataTypes.VIRTUAL,
           get() {
-            if (this.role === "admin") return "admin";
             if (this.pesquisador) return "pesquisador";
             if (this.tecnico) return "tecnico";
             return "usuario";

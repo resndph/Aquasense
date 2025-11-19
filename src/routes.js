@@ -25,10 +25,22 @@ routes.get("/health", (req, res) => {
   res.send("Server is healthy");
 });
 
-routes.use(AuthenticationMiddleware);
+routes.use(AuthenticationMiddleware); // Todas rotas abaixo exigem autenticação
 
-routes.put("/users", schemaValidator(updateSchema), UserControllers.update);
+// Rotas de Usuários
 
-routes.put("/admin/users/:id", isAdmin, UserControllers.update);
+routes.get("/users/me", UserControllers.show); //Pega os dados do usuário logado
+
+routes.put("/users/me", schemaValidator(updateSchema), UserControllers.update); //Atualiza os dados do usuário logado
+
+routes.get("/admin/users", isAdmin, UserControllers.index); //Lista todos os usuários (admin only)
+
+routes.get("/admin/users/:id", isAdmin, UserControllers.show); //Pega os dados de um usuário específico (admin only)
+
+routes.put("/admin/users/:id", schemaValidator(updateSchema), isAdmin, UserControllers.update); //Atualiza os dados de um usuário específico (admin only)
+
+routes.delete("/admin/users/:id", isAdmin, UserControllers.delete); //Deleta um usuário específico (admin only)
+
+
 
 module.exports = routes;
