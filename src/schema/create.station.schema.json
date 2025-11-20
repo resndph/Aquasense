@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "CreateStation",
+  "type": "object",
+  "properties": {
+    "nome_estacao": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "cep": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 9
+    },
+    "logradouro": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "numero": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 10
+    },
+    "bairro": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60
+    },
+    "cidade": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60
+    },
+    "estado": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 2
+    },
+    "latitude": {
+      "type": "number"
+    },
+    "longitude": {
+      "type": "number"
+    },
+    "data_ativacao": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tecnicos_ids": {
+      "type": "array",
+      "items": { "type": "integer" },
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "nome_estacao",
+    "cep",
+    "logradouro",
+    "numero",
+    "bairro",
+    "cidade",
+    "estado"
+  ],
+  "additionalProperties": false
+}
