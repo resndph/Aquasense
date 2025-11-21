@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "CreateLeitura",
+  "type": "object",
+  "properties": {
+    "id_sensor_autor": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "valor": {
+      "type": "number"
+    }
+  },
+  "required": ["id_sensor_autor", "valor"],
+  "additionalProperties": false
+}

@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "CreateSensor",
+  "type": "object",
+  "properties": {
+    "id_estacao_situado": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "tipo": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 50
+    },
+    "unidade_medida": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 20
+    },
+    "limite": {
+      "type": "number"
+    },
+    "status_sensor": {
+      "type": "string",
+      "enum": ["Ativo", "Inativo", "Em manutenção"]
+    }
+  },
+  "required": ["id_estacao_situado","tipo","unidade_medida","limite"],
+  "additionalProperties": false
+}
