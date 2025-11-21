@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "CreateReport",
+  "type": "object",
+  "properties": {
+    "pesquisador_resp": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "alerta_analisado": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "titulo": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 100
+    },
+    "descricao": {
+      "type": "string",
+      "minLength": 3
+    },
+    "acoes_corretivas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["descricao_acao"],
+        "properties": {
+          "descricao_acao": {
+            "type": "string",
+            "minLength": 3
+          },
+          "trabalhadores": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "uniqueItems": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+    "required": ["pesquisador_resp", "alerta_analisado", "titulo", "descricao"],
+    "additionalProperties": false
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "UpdateReport",
+  "type": "object",
+  "properties": {
+    "titulo": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 100
+    },
+    "descricao": {
+      "type": "string",
+      "minLength": 3
+    }
+  },
+  "additionalProperties": false
+}

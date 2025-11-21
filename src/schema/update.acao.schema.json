@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "UpdateAcaoCorretiva",
+  "type": "object",
+  "properties": {
+    "descricao_acao": {
+      "type": "string",
+      "minLength": 3
+    },
+    "status_acao": {
+      "type": "string",
+      "enum": ["Pendente", "Em andamento", "Concluída"]
+    },
+    "data_execucao": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

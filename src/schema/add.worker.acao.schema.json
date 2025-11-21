@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "AddWorkerAcao",
+  "type": "object",
+  "required": ["id_tecnico"],
+  "properties": {
+    "id_tecnico": {
+      "type": "integer",
+      "minimum": 1
+    }
+  },
+  "additionalProperties": false
+}
