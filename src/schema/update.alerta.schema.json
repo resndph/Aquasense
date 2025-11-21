@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "UpdateAlerta",
+  "type": "object",
+  "properties": {
+    "tipo_alerta": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "nivel_severidade": {
+      "type": "string",
+      "enum": ["Baixo", "Moderado", "Crítico"]
+    },
+    "descricao_alerta": {
+      "type": "string",
+      "maxLength": 255
+    }
+  },
+  "additionalProperties": false
+}

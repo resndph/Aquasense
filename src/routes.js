@@ -14,6 +14,7 @@ const RelatorioController = require("./apps/controllers/RelatorioControllers");
 const AcaoCorretivaController = require("./apps/controllers/AcaoCorretivaControllers");
 const SensorController = require("./apps/controllers/SensorControllers");
 const LeituraController = require("./apps/controllers/LeituraControllers");
+const AlertaController = require("./apps/controllers/AlertaControllers");
 
 // Schemas
 const authSchema = require("./schema/auth.schema.json");
@@ -29,6 +30,7 @@ const relatorioSchema = require("./schema/create.report.schema.json");
 const relatorioUpdateSchema = require("./schema/update.report.schema.json");
 const acaoUpdateSchema = require("./schema/update.acao.schema.json");
 const addWorkerAcaoSchema = require("./schema/add.worker.acao.schema.json");
+const updateAlertSchema = require("./schema/update.alerta.schema.json");
 
 
 const routes = new Router();
@@ -90,6 +92,11 @@ routes.get("/sensor/readings", LeituraController.index);
 routes.get("/sensor/readings/:id", LeituraController.show); 
 routes.delete("/admin/sensor/readings/:id", typeVerifyMiddleware("admin"), LeituraController.delete); 
 
+// Rotas de Alertas
 
+routes.get("/alerts", AlertaController.index); 
+routes.get("/alerts/:id", AlertaController.show); 
+routes.put("/alerts/:id", typeVerifyMiddleware("admin"), schemaValidator(updateAlertSchema), AlertaController.update); 
+routes.delete("/admin/alerts/:id", typeVerifyMiddleware("admin"), AlertaController.delete); 
 
 module.exports = routes;
