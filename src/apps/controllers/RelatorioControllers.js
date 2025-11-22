@@ -7,116 +7,125 @@ const Pesquisador = require("../models/Pesquisador");
 const Usuario = require("../models/Usuario");
 const Sensor = require("../models/Sensor");
 const Trabalha = require("../models/Trabalha");
+const Leitura = require("../models/Leitura");
+const EstacaoMonitoramento = require("../models/EstacaoMonitoramento");
 
 const database = require("../../database");
 const sequelize = database.connection;
 
 class RelatorioController {
-  async create(req, res) { // Cria um novo relatório com ações corretivas e técnicos associados e verifica se os técnicos trabalham na estação do alerta
-    const transaction = await sequelize.transaction();
-    try {
-      const {
-        alerta_analisado,
-        titulo,
-        descricao,
-        acoes_corretivas
-      } = req.body;
+  async create(req, res) { 
+  const transaction = await sequelize.transaction();
+  try {
+    const {
+      alerta_analisado,
+      titulo,
+      descricao,
+      acoes_corretivas
+    } = req.body;
 
-      const pesquisador_resp = req.newId;
+    const pesquisador_resp = req.newId;
 
-      const alerta = await Alerta.findOne({
-        where: { id_alerta: alerta_analisado },
-        transaction,
-      });
+    const alerta = await Alerta.findOne({
+      where: { id_alerta: alerta_analisado },
+      transaction,
+    });
 
-      if (!alerta) {
-        await transaction.rollback();
-        return res.status(404).json({ message: "Alerta analisado não encontrado." });
-      }
+    if (!alerta) {
+      await transaction.rollback();
+      return res.status(404).json({ message: "Alerta analisado não encontrado." });
+    }
 
-      // Buscar sensor e estação do alerta
-      const sensor = await Sensor.findOne({
-        where: { id_sensor: alerta.id_sensor },
-        transaction,
-      });
+    const leitura = await Leitura.findOne({
+      where: { id_leitura: alerta.leitura_causa },
+      transaction
+    });
 
-      if (!sensor) {
-        await transaction.rollback();
-        return res.status(404).json({ message: "Sensor do alerta não encontrado." });
-      }
+    if (!leitura) {
+      await transaction.rollback();
+      return res.status(404).json({ message: "Leitura associada ao alerta não encontrada." });
+    }
 
-      const id_estacao = sensor.id_estacao_situado;
+    const sensor = await Sensor.findOne({
+      where: { id_sensor: leitura.id_sensor_autor },
+      transaction
+    });
 
-      const relatorio = await Relatorio.create({
-        pesquisador_resp,
-        alerta_analisado,
-        titulo,
-        descricao,
-      }, { transaction });
+    if (!sensor) {
+      await transaction.rollback();
+      return res.status(404).json({ message: "Sensor da leitura não encontrado." });
+    }
 
-      // Cria ações corretivas e valida técnicos
-      if (Array.isArray(acoes_corretivas) && acoes_corretivas.length > 0) {
-        for (const acao of acoes_corretivas) {
-          const novaAcao = await AcaoCorretiva.create({
-            relatorio_autor: relatorio.id_relatorio,
-            descricao_acao: acao.descricao_acao,
-            status_acao: "Pendente",
-          }, { transaction });
+    const id_estacao = sensor.id_estacao_situado;
 
-          if (Array.isArray(acao.trabalhadores)) {
-            for (const id_tecnico of acao.trabalhadores) {
+    const relatorio = await Relatorio.create({
+      pesquisador_resp,
+      alerta_analisado,
+      titulo,
+      descricao,
+    }, { transaction });
 
-              const tecnico = await Tecnico.findOne({
-                where: { id_usuario: id_tecnico },
-                transaction,
+    if (Array.isArray(acoes_corretivas) && acoes_corretivas.length > 0) {
+      for (const acao of acoes_corretivas) {
+        const novaAcao = await AcaoCorretiva.create({
+          relatorio_autor: relatorio.id_relatorio,
+          descricao_acao: acao.descricao_acao,
+          status_acao: "Pendente",
+        }, { transaction });
+
+        if (Array.isArray(acao.trabalhadores)) {
+          for (const id_tecnico of acao.trabalhadores) {
+
+            const tecnico = await Tecnico.findOne({
+              where: { id_usuario: id_tecnico },
+              transaction,
+            });
+
+            if (!tecnico) {
+              await transaction.rollback();
+              return res.status(400).json({
+                message: `O usuário ${id_tecnico} não existe ou não é um técnico.`
               });
-
-              if (!tecnico) {
-                await transaction.rollback();
-                return res.status(400).json({
-                  message: `O usuário ${id_tecnico} não existe ou não é um técnico.`
-                });
-              }
-
-              // Verifica se trabalha na estação do alerta
-              const trabalha = await Trabalha.findOne({
-                where: {
-                  id_tecnico,
-                  id_estacao: id_estacao,
-                },
-                transaction,
-              });
-
-              if (!trabalha) {
-                await transaction.rollback();
-                return res.status(403).json({
-                  message: `O técnico ${id_tecnico} não está alocado na estação responsável pelo alerta analisado.`
-                });
-              }
-
-              await Atuacao.create({
-                id_acao: novaAcao.id_acao,
-                id_tecnico,
-              }, { transaction });
             }
+
+            const trabalha = await Trabalha.findOne({
+              where: {
+                id_tecnico,
+                id_estacao: id_estacao,
+              },
+              transaction,
+            });
+
+            if (!trabalha) {
+              await transaction.rollback();
+              return res.status(403).json({
+                message: `O técnico ${id_tecnico} não está alocado na estação responsável pelo alerta analisado.`
+              });
+            }
+
+            await Atuacao.create({
+              id_acao: novaAcao.id_acao,
+              id_tecnico,
+            }, { transaction });
           }
         }
       }
-
-      await transaction.commit();
-      return res.status(201).json({
-        message: "Relatório criado com sucesso!",
-        relatorio
-      });
-
-    } catch (error) {
-      await transaction.rollback();
-      console.error(error);
-      return res.status(500).json({ error: "Erro ao criar relatório." });
     }
+
+    await transaction.commit();
+    return res.status(201).json({
+      message: "Relatório criado com sucesso!",
+      relatorio
+    });
+
+  } catch (error) {
+    await transaction.rollback();
+    console.error(error);
+    return res.status(500).json({ error: "Erro ao criar relatório." });
+  }
   }
 
-  async update(req, res) { // Atualiza um relatório existente
+  async update(req, res) { 
     const transaction = await sequelize.transaction();
     try {
       const { id } = req.params;
@@ -161,21 +170,15 @@ class RelatorioController {
           {
             model: AcaoCorretiva,
             as: "acoes_corretivas",
-            attributes: ["id_acao", "descricao_acao", "status_acao", "data_execucao"],
-          },
-          {
-            model: Usuario,
-            as: "pesquisador_usuario",
-            attributes: ["nome"]
+            attributes: ["id_acao", "descricao_acao", "status_acao", "data_execucao"]
           },
           {
             model: Pesquisador,
             as: "pesquisador",
-            attributes: ["id_usuario", "area_atuacao", "instituicao_vinculo", "nivel_formacao"]
+            include: [{ model: Usuario, as: "usuario", attributes: ["nome", "email"] }]
           }
-        ],
+        ]
       });
-
       return res.status(200).json(relatorios);
     }
 
@@ -189,21 +192,15 @@ class RelatorioController {
           {
             model: AcaoCorretiva,
             as: "acoes_corretivas",
-            attributes: ["id_acao", "descricao_acao", "status_acao", "data_execucao"],
-          },
-          {
-            model: Usuario,
-            as: "pesquisador_usuario",
-            attributes: ["nome"]
+            attributes: ["id_acao", "descricao_acao", "status_acao", "data_execucao"]
           },
           {
             model: Pesquisador,
             as: "pesquisador",
-            attributes: ["id_usuario", "area_atuacao", "instituicao_vinculo", "nivel_formacao"]
+            include: [{ model: Usuario, as: "usuario", attributes: ["nome", "email"] }]
           }
-        ],
+        ]
       });
-
       return res.status(200).json(relatorios);
     }
 
@@ -212,30 +209,41 @@ class RelatorioController {
       attributes: ["id_estacao"]
     });
 
-    if (estacoes.length === 0) {
+    const idsEstacoes = estacoes.map(e => e.id_estacao);
+
+    if (idsEstacoes.length === 0) {
       return res.status(200).json([]);
     }
-
-    const idsEstacoes = estacoes.map(e => e.id_estacao);
 
     const relatorios = await Relatorio.findAll({
       include: [
         {
           model: Alerta,
           as: "alerta",
+          required: true,
           include: [
             {
-              model: Sensor,
-              as: "sensor",
-              where: { id_estacao_situado: idsEstacoes },
-              required: true
+              model: Leitura,
+              as: "leitura",
+              required: true,
+              include: [
+                {
+                  model: Sensor,
+                  as: "sensor",
+                  required: true,
+                  where: { id_estacao_situado: idsEstacoes },
+                  include: [
+                    { model: EstacaoMonitoramento, as: "estacao" }
+                  ]
+                }
+              ]
             }
           ]
         },
         {
           model: AcaoCorretiva,
           as: "acoes_corretivas",
-          attributes: ["id_acao", "descricao_acao", "status_acao", "data_execucao"],
+          attributes: ["id_acao", "descricao_acao", "status_acao", "data_execucao"]
         }
       ]
     });
@@ -252,16 +260,14 @@ class RelatorioController {
   try {
     const { id } = req.params;
     const loggedUserId = req.newId;
-    const loggedRole = req.userRole; 
+    const loggedRole = req.userRole;
 
     if (loggedRole !== "admin") {
-
       const tecnico = await Tecnico.findOne({
         where: { id_usuario: loggedUserId }
       });
 
       if (tecnico) {
-        // Buscar estações onde o técnico trabalha
         const estacoes = await Trabalha.findAll({
           where: { id_tecnico: loggedUserId },
           attributes: ["id_estacao"]
@@ -269,19 +275,26 @@ class RelatorioController {
 
         const idsEstacoes = estacoes.map(e => e.id_estacao);
 
-        // Verifica se este relatório pertence a uma dessas estações
         const permitido = await Relatorio.findOne({
           where: { id_relatorio: id },
           include: [
             {
               model: Alerta,
               as: "alerta",
+              required: true,
               include: [
                 {
-                  model: Sensor,
-                  as: "sensor",
-                  where: { id_estacao_situado: idsEstacoes },
-                  required: true
+                  model: Leitura,
+                  as: "leitura",
+                  required: true,
+                  include: [
+                    {
+                      model: Sensor,
+                      as: "sensor",
+                      required: true,
+                      where: { id_estacao_situado: idsEstacoes }
+                    }
+                  ]
                 }
               ]
             }
@@ -299,8 +312,7 @@ class RelatorioController {
     const relatorio = await Relatorio.findOne({
       where: { id_relatorio: id },
       include: [
-        {    // Agora busca o relatório com todos os includes
-
+        {
           model: AcaoCorretiva,
           as: "acoes_corretivas",
           include: [
@@ -311,18 +323,33 @@ class RelatorioController {
             }
           ]
         },
-        { model: Alerta, as: "alerta" },
         {
-          model: Usuario,
-          as: "pesquisador_usuario",
-          attributes: ["nome"]
+          model: Alerta,
+          as: "alerta",
+          include: [
+            {
+              model: Leitura,
+              as: "leitura",
+              include: [
+                {
+                  model: Sensor,
+                  as: "sensor",
+                  include: [
+                    { model: EstacaoMonitoramento, as: "estacao" }
+                  ]
+                }
+              ]
+            }
+          ]
         },
         {
           model: Pesquisador,
           as: "pesquisador",
-          attributes: ["id_usuario", "area_atuacao", "instituicao_vinculo", "nivel_formacao"]
+          include: [
+            { model: Usuario, as: "usuario", attributes: ["nome", "email"] }
+          ]
         }
-      ],
+      ]
     });
 
     if (!relatorio) {
@@ -337,7 +364,7 @@ class RelatorioController {
   }
   }
 
-  async delete(req, res) { // Deleta um relatório
+  async delete(req, res) { 
     const transaction = await sequelize.transaction();
     try {
       const { id } = req.params;

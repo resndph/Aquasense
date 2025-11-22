@@ -5,6 +5,7 @@ const Tecnico = require("../models/Tecnico");
 const Alerta = require("../models/Alerta");
 const Sensor = require("../models/Sensor");
 const Trabalha = require("../models/Trabalha");
+const Leitura = require("../models/Leitura");
 
 const database = require("../../database");
 const sequelize = database.connection;
@@ -168,108 +169,123 @@ class AcaoCorretivaController {
     }
   }
 
-  async addWorker(req, res) { // Adiciona um técnico a uma ação corretiva e verifica se ele trabalha na estação do alerta
-    const transaction = await sequelize.transaction();
-    try {
-      const { id } = req.params; 
-      const { id_tecnico } = req.body;
+  async addWorker(req, res) {
+  const transaction = await sequelize.transaction();
+  try {
+    const { id } = req.params; 
+    const { id_tecnico } = req.body;
 
-      const acao = await AcaoCorretiva.findOne({ where: { id_acao: id }, transaction });
+    const acao = await AcaoCorretiva.findOne({
+      where: { id_acao: id },
+      transaction
+    });
 
-      if (!acao) {
-        await transaction.rollback();
-        return res.status(404).json({ message: "Ação corretiva não encontrada." });
-      }
-
-      const relatorio = await Relatorio.findOne({
-        where: { id_relatorio: acao.relatorio_autor },
-        transaction,
-      });
-
-      if (!relatorio) {
-        await transaction.rollback();
-        return res.status(500).json({ message: "Relatório associado não encontrado." });
-      }
-
-      const alerta = await Alerta.findOne({
-        where: { id_alerta: relatorio.alerta_analisado },
-        transaction,
-      });
-
-      if (!alerta) {
-        await transaction.rollback();
-        return res.status(500).json({ message: "Alerta associado ao relatório não encontrado." });
-      }
-
-      const sensor = await Sensor.findOne({
-        where: { id_sensor: alerta.id_sensor },
-        transaction,
-      });
-
-      if (!sensor) {
-        await transaction.rollback();
-        return res.status(500).json({ message: "Sensor associado ao alerta não encontrado." });
-      }
-
-      const id_estacao = sensor.id_estacao_situado;
-
-      const tecnico = await Tecnico.findOne({
-        where: { id_usuario: id_tecnico },
-        transaction,
-      });
-
-      if (!tecnico) {
-        await transaction.rollback();
-        return res.status(400).json({ message: "Técnico não encontrado." });
-      }
-
-      const trabalha = await Trabalha.findOne({
-        where: { id_tecnico, id_estacao },
-        transaction,
-      });
-
-      if (!trabalha) {
-        await transaction.rollback();
-        return res.status(403).json({
-          message: `O técnico ${id_tecnico} não está alocado na estação onde ocorreu o alerta.`,
-        });
-      }
-
-      // Evita duplicidade
-      const existe = await Atuacao.findOne({
-        where: { id_acao: id, id_tecnico },
-        transaction,
-      });
-
-      if (existe) {
-        await transaction.rollback();
-        return res.status(400).json({ message: "Técnico já está nesta ação." });
-      }
-
-      await Atuacao.create(
-        {
-          id_acao: id,
-          id_tecnico,
-        },
-        { transaction }
-      );
-
-      await transaction.commit();
-      return res.status(201).json({ message: "Técnico adicionado à ação." });
-    } catch (error) {
+    if (!acao) {
       await transaction.rollback();
-      console.error(error);
-      return res.status(500).json({ error: "Erro ao adicionar técnico à ação." });
+      return res.status(404).json({ message: "Ação corretiva não encontrada." });
     }
+
+    const relatorio = await Relatorio.findOne({
+      where: { id_relatorio: acao.relatorio_autor },
+      transaction,
+    });
+
+    if (!relatorio) {
+      await transaction.rollback();
+      return res.status(500).json({ message: "Relatório associado não encontrado." });
+    }
+
+    const alerta = await Alerta.findOne({
+      where: { id_alerta: relatorio.alerta_analisado },
+      transaction,
+    });
+
+    if (!alerta) {
+      await transaction.rollback();
+      return res.status(500).json({ message: "Alerta associado ao relatório não encontrado." });
+    }
+
+    const leitura = await Leitura.findOne({
+      where: { id_leitura: alerta.leitura_causa },
+      transaction,
+    });
+
+    if (!leitura) {
+      await transaction.rollback();
+      return res.status(500).json({ message: "Leitura associada ao alerta não encontrada." });
+    }
+
+    const sensor = await Sensor.findOne({
+      where: { id_sensor: leitura.id_sensor_autor },
+      transaction,
+    });
+
+    if (!sensor) {
+      await transaction.rollback();
+      return res.status(500).json({ message: "Sensor associado à leitura não encontrado." });
+    }
+
+    const id_estacao = sensor.id_estacao_situado;
+
+    const tecnico = await Tecnico.findOne({
+      where: { id_usuario: id_tecnico },
+      transaction,
+    });
+
+    if (!tecnico) {
+      await transaction.rollback();
+      return res.status(400).json({ message: "Técnico não encontrado." });
+    }
+
+    const trabalha = await Trabalha.findOne({
+      where: { id_tecnico, id_estacao },
+      transaction,
+    });
+
+    if (!trabalha) {
+      await transaction.rollback();
+      return res.status(403).json({
+        message: `O técnico ${id_tecnico} não está alocado na estação responsável pelo alerta analisado.`,
+      });
+    }
+
+    const existe = await Atuacao.findOne({
+      where: { id_acao: id, id_tecnico },
+      transaction,
+    });
+
+    if (existe) {
+      await transaction.rollback();
+      return res.status(400).json({ message: "Técnico já está nesta ação." });
+    }
+
+    // 8) Criar atuação
+    await Atuacao.create(
+      {
+        id_acao: id,
+        id_tecnico,
+      },
+      { transaction }
+    );
+
+    await transaction.commit();
+    
+    return res.status(201).json({ message: "Técnico adicionado à ação." });
+    
+  } catch (error) {
+    await transaction.rollback();
+    console.error(error);
+    return res.status(500).json({ error: "Erro ao adicionar técnico à ação." });
+  }
   }
 
   async removeWorker(req, res) { // Remove um técnico de uma ação corretiva
     const transaction = await sequelize.transaction();
     try {
-      const { id, workerId } = req.params;
+      const { id, id_tecnico } = req.params;
 
       const atuacao = await Atuacao.findOne({
-        where: { id_acao: id, id_tecnico: workerId },
+        where: { id_acao: id, id_tecnico: id_tecnico },
         transaction,
       });
 
@@ -279,7 +295,7 @@ class AcaoCorretivaController {
       }
 
       await Atuacao.destroy({
-        where: { id_acao: id, id_tecnico: workerId },
+        where: { id_acao: id, id_tecnico: id_tecnico },
         transaction,
       });
 

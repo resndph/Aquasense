@@ -3,10 +3,6 @@
   "title": "CreateReport",
   "type": "object",
   "properties": {
-    "pesquisador_resp": {
-      "type": "integer",
-      "minimum": 1
-    },
     "alerta_analisado": {
       "type": "integer",
       "minimum": 1
@@ -43,6 +39,6 @@
       }
     }
   },
-    "required": ["pesquisador_resp", "alerta_analisado", "titulo", "descricao"],
+    "required": [ "alerta_analisado", "titulo", "descricao"],
     "additionalProperties": false
 }

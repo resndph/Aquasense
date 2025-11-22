@@ -3,6 +3,7 @@ const Sensor = require("../models/Sensor");
 const EstacaoMonitoramento = require("../models/EstacaoMonitoramento");
 const Trabalha = require("../models/Trabalha");
 const Tecnico = require("../models/Tecnico");
+const Alerta = require("../models/Alerta");
 
 const database = require("../../database");
 const sequelize = database.connection;

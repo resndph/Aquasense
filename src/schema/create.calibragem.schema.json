@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "CreateCalibragem",
+  "type": "object",
+  "properties": {
+    "id_sensor": {
+      "type": "integer",
+      "minimum": 1
+    }
+  },
+  "required": ["id_sensor"],
+  "additionalProperties": false
+}
