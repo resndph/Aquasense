@@ -1,0 +1,1307 @@
+{
+	"info": {
+		"_postman_id": "80bad3b3-1550-44e3-9b84-cbf3534925d1",
+		"name": "API Controle de Qualidade da Água",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "49422702",
+		"_collection_link": "https://resndph-7296066.postman.co/workspace/a09b47bc-e1d1-43ed-811a-d66699630667/collection/49422702-80bad3b3-1550-44e3-9b84-cbf3534925d1?action=share&source=collection_link&creator=49422702"
+	},
+	"item": [
+		{
+			"name": "UsersRoutes",
+			"item": [
+				{
+					"name": "Create User",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenTecnicoADMIN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"Ana Lima\",\n  \"email\": \"ana@example.com\",\n  \"password\": \"senha123\",\n  \"area_atuacao\": \"Qualidade da água\",\n  \"instituicao_vinculo\": \"Universidade Federal\",\n  \"nivel_formacao\": \"Mestrado\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}/users"
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenTecnico}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"Pedro Fonseca\",\n  \"email\": \"novoemail@example.com\",\n  \"old_password\": \"senha123\",\n  \"new_password\": \"novaSenha123\",\n  \"confirm_password\": \"novaSenha123\",\n  \"telefone\": \"11987654321\",\n  \"especializacao\": \"Eletrônica\",\n  \"disponibilidade\": \"Parcial\",\n  \"registro_profissional\": \"REG998877\",\n  \"area_atuacao\": \"Medições ambientais\",\n  \"instituicao_vinculo\": \"Instituto Federal\",\n  \"nivel_formacao\": \"Graduação\"\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}/users/me"
+					},
+					"response": []
+				},
+				{
+					"name": "Show User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenTecnico}}",
+								"type": "text"
+							}
+						],
+						"url": "{{baseURL}}/users/me"
+					},
+					"response": []
+				},
+				{
+					"name": "show User [ADMIN]",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"João Silva\",\n  \"email\": \"joao.silva@example.com\",\n  \"password\": \"senhaSegura123\",\n  \"telefone\": \"35999999999\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}/health"
+					},
+					"response": []
+				},
+				{
+					"name": "List Users [ADMIN]",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"João Silva\",\n  \"email\": \"joao.silva@example.com\",\n  \"password\": \"senhaSegura123\",\n  \"telefone\": \"35999999999\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}/health"
+					},
+					"response": []
+				},
+				{
+					"name": "Update User [ADMIN]",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenPesquisadorADMIN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"Pedro Fonseca\",\n  \"email\": \"novoemail@example.com\",\n  \"telefone\": \"11987654321\",\n  \"especializacao\": \"Eletrônica\",\n  \"disponibilidade\": \"Parcial\",\n  \"registro_profissional\": \"REG998877\",\n  \"area_atuacao\": \"Medições ambientais\",\n  \"instituicao_vinculo\": \"Instituto Federal\",\n  \"nivel_formacao\": \"Graduação\"\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/admin/users/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"admin",
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User[ADMIN]",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{baseURL}}/admin/users/2"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "StationRoutes",
+			"item": [
+				{
+					"name": "Create Station [ADMIN]",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenPesquisadorADMIN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome_estacao\": \"Estação Central\",\n  \"cep\": \"12345678\",\n  \"logradouro\": \"Rua das Flores\",\n  \"numero\": \"123\",\n  \"bairro\": \"Centro\",\n  \"cidade\": \"São Paulo\",\n  \"estado\": \"SP\",\n  \"latitude\": -23.55052,\n  \"longitude\": -46.633308,\n  \"data_ativacao\": \"2025-01-10T10:00:00Z\",\n  \"tecnicos_ids\": [1, 2]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}/admin/stations"
+					},
+					"response": []
+				},
+				{
+					"name": "List Stations",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenTecnico}}",
+								"type": "text"
+							}
+						],
+						"url": "{{baseURL}}/stations"
+					},
+					"response": []
+				},
+				{
+					"name": "Show Station",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6ImMyNDc5ZWVjMDgwYzgxMWE0NTJhYmVlZThmYzU1NWExOjJkIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzYzNDk4ODUxLCJleHAiOjE3NjQxMDM2NTF9.azTX8aU2phj7E6l1E6RmawS-DHbe828isYJrbm7r8Vo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/stations/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"stations",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Station [ADMIN]",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6ImMyNDc5ZWVjMDgwYzgxMWE0NTJhYmVlZThmYzU1NWExOjJkIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzYzNDk4ODUxLCJleHAiOjE3NjQxMDM2NTF9.azTX8aU2phj7E6l1E6RmawS-DHbe828isYJrbm7r8Vo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome_estacao\": \"Estação Norte\",\n  \"cep\": \"87654321\",\n  \"logradouro\": \"Avenida Brasil\",\n  \"numero\": \"987\",\n  \"bairro\": \"Jardins\",\n  \"cidade\": \"Curitiba\",\n  \"estado\": \"PR\",\n  \"latitude\": -25.4284,\n  \"longitude\": -49.2733,\n  \"data_ativacao\": \"2025-02-15T08:00:00Z\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/admin/stations/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"admin",
+								"stations",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Station [ADMIN]",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6ImMyNDc5ZWVjMDgwYzgxMWE0NTJhYmVlZThmYzU1NWExOjJkIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzYzNDk4ODUxLCJleHAiOjE3NjQxMDM2NTF9.azTX8aU2phj7E6l1E6RmawS-DHbe828isYJrbm7r8Vo",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/admin/stations/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"admin",
+								"stations",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add User to Station [ADMIN]",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6ImMyNDc5ZWVjMDgwYzgxMWE0NTJhYmVlZThmYzU1NWExOjJkIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzYzNDk4ODUxLCJleHAiOjE3NjQxMDM2NTF9.azTX8aU2phj7E6l1E6RmawS-DHbe828isYJrbm7r8Vo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id_tecnico\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/admin/stations/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"admin",
+								"stations",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove User to Station [ADMIN]",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6ImMyNDc5ZWVjMDgwYzgxMWE0NTJhYmVlZThmYzU1NWExOjJkIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzYzNDk4ODUxLCJleHAiOjE3NjQxMDM2NTF9.azTX8aU2phj7E6l1E6RmawS-DHbe828isYJrbm7r8Vo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome_estacao\": \"Estação Central\",\n  \"cep\": \"12345678\",\n  \"logradouro\": \"Rua das Flores\",\n  \"numero\": \"100\",\n  \"bairro\": \"Centro\",\n  \"cidade\": \"São Paulo\",\n  \"estado\": \"SP\",\n  \"latitude\": -23.567890,\n  \"longitude\": -46.654321\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/admin/stations/:id/:id_tecnico",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"admin",
+								"stations",
+								":id",
+								":id_tecnico"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								},
+								{
+									"key": "id_tecnico",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ReportRoutes",
+			"item": [
+				{
+					"name": "Create Report",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6IjBhODY0MDUyZTgxMTBmNzliZmVmYWJkYmVjMWNlZWM1OjYyIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzYzNzc3MjA5LCJleHAiOjE3NjQzODIwMDl9.yQoEbEQ3PeOx-5-y-iV_Rq3wPYgsCcu6xKezvNOE_Vk",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"alerta_analisado\": 5,\n  \"titulo\": \"Relatório de Análise da Estação\",\n  \"descricao\": \"Descrição detalhada do relatório.\",\n  \"arquivo_anexo\": \"nome-do-arquivo.pdf\",\n  \"acoes_corretivas\": [\n    {\n      \"descricao_acao\": \"Verificar o sensor novamente\",\n      \"trabalhadores\": [1, 3]\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}/reports"
+					},
+					"response": []
+				},
+				{
+					"name": "List Report",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6ImYxNTE4YmI4ZmJlNTQ4NmNkZDEyN2IwNjEzYTFkZTBkOmYzIiwicm9sZSI6InVzdWFyaW8iLCJpYXQiOjE3NjM3ODY1NjEsImV4cCI6MTc2NDM5MTM2MX0.r23scppbC9xsuu8ed3eFtftnP3BVLDvcPh766B8rnrg",
+								"type": "text"
+							}
+						],
+						"url": "{{baseURL}}/reports"
+					},
+					"response": []
+				},
+				{
+					"name": "Show Report",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6ImYxNTE4YmI4ZmJlNTQ4NmNkZDEyN2IwNjEzYTFkZTBkOmYzIiwicm9sZSI6InVzdWFyaW8iLCJpYXQiOjE3NjM3ODY1NjEsImV4cCI6MTc2NDM5MTM2MX0.r23scppbC9xsuu8ed3eFtftnP3BVLDvcPh766B8rnrg",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/reports/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"reports",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "8"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Report",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6IjBhODY0MDUyZTgxMTBmNzliZmVmYWJkYmVjMWNlZWM1OjYyIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzYzNzc3MjA5LCJleHAiOjE3NjQzODIwMDl9.yQoEbEQ3PeOx-5-y-iV_Rq3wPYgsCcu6xKezvNOE_Vk",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"titulo\": \"Atualização do Relatório\",\n  \"descricao\": \"Descrição atualizada do relatório.\",\n  \"arquivo_anexo\": \"novo-arquivo.pdf\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/reports/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"reports",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Report",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6ImMyNDc5ZWVjMDgwYzgxMWE0NTJhYmVlZThmYzU1NWExOjJkIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzYzNDk4ODUxLCJleHAiOjE3NjQxMDM2NTF9.azTX8aU2phj7E6l1E6RmawS-DHbe828isYJrbm7r8Vo",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/reports/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"reports",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CorrectiveActionRoutes",
+			"item": [
+				{
+					"name": "List Actions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6IjBhODY0MDUyZTgxMTBmNzliZmVmYWJkYmVjMWNlZWM1OjYyIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzYzNzc3MjA5LCJleHAiOjE3NjQzODIwMDl9.yQoEbEQ3PeOx-5-y-iV_Rq3wPYgsCcu6xKezvNOE_Vk",
+								"type": "text"
+							}
+						],
+						"url": "{{baseURL}}/corrective-actions"
+					},
+					"response": []
+				},
+				{
+					"name": "Show Actions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6ImYxNTE4YmI4ZmJlNTQ4NmNkZDEyN2IwNjEzYTFkZTBkOmYzIiwicm9sZSI6InVzdWFyaW8iLCJpYXQiOjE3NjM3ODY1NjEsImV4cCI6MTc2NDM5MTM2MX0.r23scppbC9xsuu8ed3eFtftnP3BVLDvcPh766B8rnrg",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/corrective-actions/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"corrective-actions",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "9"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Action",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6IjBhODY0MDUyZTgxMTBmNzliZmVmYWJkYmVjMWNlZWM1OjYyIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzYzNzc3MjA5LCJleHAiOjE3NjQzODIwMDl9.yQoEbEQ3PeOx-5-y-iV_Rq3wPYgsCcu6xKezvNOE_Vk",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"descricao_acao\": \"Trocar o sensor danificado\",\n  \"status_acao\": \"Em andamento\",\n  \"data_execucao\": \"2025-01-10T15:30:00Z\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/corrective-actions/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"corrective-actions",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Action",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6IjBhODY0MDUyZTgxMTBmNzliZmVmYWJkYmVjMWNlZWM1OjYyIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzYzNzc3MjA5LCJleHAiOjE3NjQzODIwMDl9.yQoEbEQ3PeOx-5-y-iV_Rq3wPYgsCcu6xKezvNOE_Vk",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/corrective-actions/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"corrective-actions",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Worker to Action",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6ImMyNDc5ZWVjMDgwYzgxMWE0NTJhYmVlZThmYzU1NWExOjJkIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzYzNDk4ODUxLCJleHAiOjE3NjQxMDM2NTF9.azTX8aU2phj7E6l1E6RmawS-DHbe828isYJrbm7r8Vo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id_tecnico\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/corrective-actions/:id/workers",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"corrective-actions",
+								":id",
+								"workers"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Worker to Action",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6IjBhODY0MDUyZTgxMTBmNzliZmVmYWJkYmVjMWNlZWM1OjYyIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzYzNzc3MjA5LCJleHAiOjE3NjQzODIwMDl9.yQoEbEQ3PeOx-5-y-iV_Rq3wPYgsCcu6xKezvNOE_Vk",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/corrective-actions/:id/workers/:id_tecnico",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"corrective-actions",
+								":id",
+								"workers",
+								":id_tecnico"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "11"
+								},
+								{
+									"key": "id_tecnico",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SensorRoutes",
+			"item": [
+				{
+					"name": "Create Sensor",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenPesquisadorADMIN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id_estacao_situado\": 1,\n  \"tipo\": \"Temperatura\",\n  \"unidade_medida\": \"°C\",\n  \"limite\": 50,\n  \"status_sensor\": \"Ativo\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}/admin/sensors"
+					},
+					"response": []
+				},
+				{
+					"name": "List Sensor",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6IjI3MDcwM2VhNDBhMTU1NmE4ODMxMjc5MjMxZjA0MGZlOmRjMWYiLCJyb2xlIjoidXN1YXJpbyIsImlhdCI6MTc2Mzc4NDA0MCwiZXhwIjoxNzY0Mzg4ODQwfQ.p_KLSNs7hDM-WS58j8WmDYgy0cfF4csGvtFvRE2mlfI",
+								"type": "text"
+							}
+						],
+						"url": "{{baseURL}}/sensors"
+					},
+					"response": []
+				},
+				{
+					"name": "Show Sensor",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6IjI3MDcwM2VhNDBhMTU1NmE4ODMxMjc5MjMxZjA0MGZlOmRjMWYiLCJyb2xlIjoidXN1YXJpbyIsImlhdCI6MTc2Mzc4NDA0MCwiZXhwIjoxNzY0Mzg4ODQwfQ.p_KLSNs7hDM-WS58j8WmDYgy0cfF4csGvtFvRE2mlfI",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/sensors/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"sensors",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Sensor",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenPesquisadorADMIN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id_estacao_situado\": 1,\n  \"tipo\": \"Umidade\",\n  \"unidade_medida\": \"%\",\n  \"limite\": 85,\n  \"status_sensor\": \"Em manutenção\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/admin/sensors/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"admin",
+								"sensors",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Sensor",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenPesquisadorADMIN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/admin/sensors/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"admin",
+								"sensors",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "8"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ReadingRoutes",
+			"item": [
+				{
+					"name": "List Reading",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6IjUwNGNlYjJkNWE1NTMzNjU0YmQzMTRkOTQyYjkxZjhlOmI2MTIiLCJyb2xlIjoidXN1YXJpbyIsImlhdCI6MTc2MzcxMTU1NywiZXhwIjoxNzY0MzE2MzU3fQ.r0Nk4mDFBKw-hr46Rxrw5rGMmMAo7Q9mEqJFzK_lNRI",
+								"type": "text"
+							}
+						],
+						"url": "{{baseURL}}/sensor/readings"
+					},
+					"response": []
+				},
+				{
+					"name": "Show Reading",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6IjUwNGNlYjJkNWE1NTMzNjU0YmQzMTRkOTQyYjkxZjhlOmI2MTMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NjM3MDk0NzQsImV4cCI6MTc2NDMxNDI3NH0.d4JOKtT8q0CoNh5tH_9oHLnHkLibUVxh6ePl09cT-AU",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/sensor/readings/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"sensor",
+								"readings",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Reading",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6IjUwNGNlYjJkNWE1NTMzNjU0YmQzMTRkOTQyYjkxZjhlOmI2MTIiLCJyb2xlIjoidXN1YXJpbyIsImlhdCI6MTc2MzcxMTU1NywiZXhwIjoxNzY0MzE2MzU3fQ.r0Nk4mDFBKw-hr46Rxrw5rGMmMAo7Q9mEqJFzK_lNRI",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/admin/sensor/readings/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"admin",
+								"sensor",
+								"readings",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AlertRoutes",
+			"item": [
+				{
+					"name": "List Alerts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6IjI3MDcwM2VhNDBhMTU1NmE4ODMxMjc5MjMxZjA0MGZlOmRjMWYiLCJyb2xlIjoidXN1YXJpbyIsImlhdCI6MTc2Mzc4NDA0MCwiZXhwIjoxNzY0Mzg4ODQwfQ.p_KLSNs7hDM-WS58j8WmDYgy0cfF4csGvtFvRE2mlfI",
+								"type": "text"
+							}
+						],
+						"url": "{{baseURL}}/alerts"
+					},
+					"response": []
+				},
+				{
+					"name": "Show Alert",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6IjI3MDcwM2VhNDBhMTU1NmE4ODMxMjc5MjMxZjA0MGZlOmRjMWYiLCJyb2xlIjoidXN1YXJpbyIsImlhdCI6MTc2Mzc4NDA0MCwiZXhwIjoxNzY0Mzg4ODQwfQ.p_KLSNs7hDM-WS58j8WmDYgy0cfF4csGvtFvRE2mlfI",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/alerts/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"alerts",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Alert",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6IjBhODY0MDUyZTgxMTBmNzliZmVmYWJkYmVjMWNlZWM1OjYyIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzYzNzc3MjA5LCJleHAiOjE3NjQzODIwMDl9.yQoEbEQ3PeOx-5-y-iV_Rq3wPYgsCcu6xKezvNOE_Vk",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"tipo_alerta\": \"Temperatura Alta\",\n  \"nivel_severidade\": \"Crítico\",\n  \"descricao_alerta\": \"Níveis críticos detectados no sensor da estação 1.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/admin/alerts/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"admin",
+								"alerts",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Alert",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6ImMyNDc5ZWVjMDgwYzgxMWE0NTJhYmVlZThmYzU1NWExOjJkIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzYzNDk4ODUxLCJleHAiOjE3NjQxMDM2NTF9.azTX8aU2phj7E6l1E6RmawS-DHbe828isYJrbm7r8Vo",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/admin/alerts/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"admin",
+								"alerts",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CalibrationRoutes",
+			"item": [
+				{
+					"name": "Create Calibration",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenTecnicoADMIN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id_sensor\": 3\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}/calibrations"
+					},
+					"response": []
+				},
+				{
+					"name": "List Calibrations",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6IjI3MDcwM2VhNDBhMTU1NmE4ODMxMjc5MjMxZjA0MGZlOmRjMWYiLCJyb2xlIjoidXN1YXJpbyIsImlhdCI6MTc2Mzc4NDA0MCwiZXhwIjoxNzY0Mzg4ODQwfQ.p_KLSNs7hDM-WS58j8WmDYgy0cfF4csGvtFvRE2mlfI",
+								"type": "text"
+							}
+						],
+						"url": "{{baseURL}}/calibrations"
+					},
+					"response": []
+				},
+				{
+					"name": "Show Calibration",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6IjI3MDcwM2VhNDBhMTU1NmE4ODMxMjc5MjMxZjA0MGZlOmRjMWYiLCJyb2xlIjoidXN1YXJpbyIsImlhdCI6MTc2Mzc4NDA0MCwiZXhwIjoxNzY0Mzg4ODQwfQ.p_KLSNs7hDM-WS58j8WmDYgy0cfF4csGvtFvRE2mlfI",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/calibrations/:id_tecnico/:id_sensor",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"calibrations",
+								":id_tecnico",
+								":id_sensor"
+							],
+							"variable": [
+								{
+									"key": "id_tecnico",
+									"value": "7"
+								},
+								{
+									"key": "id_sensor",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Calibration",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdJZCI6IjI3MDcwM2VhNDBhMTU1NmE4ODMxMjc5MjMxZjA0MGZlOmRjMWYiLCJyb2xlIjoidXN1YXJpbyIsImlhdCI6MTc2Mzc4NDA0MCwiZXhwIjoxNzY0Mzg4ODQwfQ.p_KLSNs7hDM-WS58j8WmDYgy0cfF4csGvtFvRE2mlfI",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/calibrations/:id_tecnico/:id_sensor",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"calibrations",
+								":id_tecnico",
+								":id_sensor"
+							],
+							"variable": [
+								{
+									"key": "id_tecnico",
+									"value": "11"
+								},
+								{
+									"key": "id_sensor",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "health",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{baseURL}}/health"
+			},
+			"response": []
+		},
+		{
+			"name": "Auth",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"usuario@example.com\",\n  \"password\": \"senha123\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{baseURL}}/auth"
+			},
+			"response": []
+		},
+		{
+			"name": "Upload File",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{TokenTecnico}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": "{{baseURL}}/upload"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "TokenTecnicoADMIN",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "TokenTecnico",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "TokenPesquisadorADMIN",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "TokenPEsquisador",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
