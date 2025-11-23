@@ -1,0 +1,9 @@
+{
+  "name": "sensor-simulator",
+  "version": "1.0.0",
+  "main": "main.js",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "dotenv": "^16.0.0"
+  }
+}

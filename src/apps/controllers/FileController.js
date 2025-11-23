@@ -3,7 +3,7 @@ require("dotenv").config();
 const fsp = require('fs/promises');
 const B2 = require('backblaze-b2');
 
-const { APPLICATION_KEY_ID, APPLICATION_KEY, BUCKET_ID, BASE_URL} = process.env;
+const { APPLICATION_KEY_ID, APPLICATION_KEY, BUCKET_ID, BASE_URL_BACKBLAZE} = process.env;
 
 const b2 = new B2({
   applicationKeyId: APPLICATION_KEY_ID, 
@@ -39,7 +39,7 @@ class Filecontroller {
 
         await unlikeAsync(path)
 
-        return res.send({ url: `${BASE_URL}${data.fileName}`});
+        return res.send({ url: `${BASE_URL_BACKBLAZE}${data.fileName}`});
     } catch (error) {
       return res.status(400).send({ message: 'Erro ao fazer upload do arquivo.' });
     }

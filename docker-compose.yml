@@ -37,5 +37,13 @@ services:
         npx sequelize-cli db:migrate &&
         yarn start
       "
+  sensor-simulator:
+    build: ./sensor-simulator
+    container_name: sensor-simulator
+    depends_on:
+      - apicontainer
+    env_file:
+      - ./sensor-simulator/.env
+    restart: always
 volumes:
   mysql_data:

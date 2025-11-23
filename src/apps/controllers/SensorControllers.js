@@ -3,6 +3,7 @@ const EstacaoMonitoramento = require("../models/EstacaoMonitoramento");
 const Trabalha = require("../models/Trabalha");
 const Tecnico = require("../models/Tecnico");
 
+const jwt = require("jsonwebtoken");
 const database = require("../../database");
 const sequelize = database.connection;
 
@@ -199,6 +200,42 @@ class SensorController {
       return res.status(500).json({ error: "Erro ao deletar sensor." });
     }
   }
+
+  async indexForSimulator(req, res) {
+  try {
+    const sensores = await Sensor.findAll({
+      attributes: ["id_sensor", "limite", "id_estacao_situado", "tipo", "status_sensor"],
+    });
+
+    return res.status(200).json(sensores);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Erro ao listar sensores." });
+  }
+  }
+  
+  async generateSensorToken(req, res) {
+    try {
+      if (process.env.NODE_ENV === "production") {
+        return res.status(403).json({
+          message: "Rota indisponível em produção."
+        });
+      }
+
+      const token = jwt.sign(
+        { type: "sensor_service" },
+        process.env.SENSOR_SERVICE_SECRET,
+        { expiresIn: "30d" }
+      );
+
+      return res.status(200).json({ token });
+
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Erro ao gerar token." });
+    }
+  }
+
 }
 
 module.exports = new SensorController();

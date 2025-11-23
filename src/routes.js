@@ -6,6 +6,8 @@ const schemaValidator = require("./apps/middlewares/schemaValidator");
 const AuthenticationMiddleware = require("./apps/middlewares/authentication");
 const OptionalAuthMiddleware = require("./apps/middlewares/optionalAuth");
 const typeVerifyMiddleware = require("./apps/middlewares/typeVerify");
+const sensorAuthMiddleware = require("./apps/middlewares/sensorAuth");
+
 
 // Controllers
 const AuthenticationController = require("./apps/controllers/AuthenticationController");
@@ -42,6 +44,15 @@ const routes = new Router();
 routes.post("/users", OptionalAuthMiddleware, schemaValidator(userSchema), UserControllers.create); //Cria um novo usuário 
 routes.post("/auth", schemaValidator(authSchema), AuthenticationController.authenticate);  //Autentica um usuário 
 routes.get("/health", (req, res) => {res.send("Server is healthy");}); // Rota de verificação de saúde do servidor
+
+// Rotas para simulação de leitura de sensores por serviço externo
+
+if (process.env.NODE_ENV !== "production") { 
+  routes.get("/dev/generate-sensor-token", SensorController.generateSensorToken); //Rota para gerar token do serviço de sensores (somente em dev)
+} 
+routes.post("/sensor-service/readings",sensorAuthMiddleware,schemaValidator(createReadingSchema),LeituraController.create); //Rota para serviço de sensores criar uma nova leitura (simulação)
+routes.get("/sensor-service/sensors",sensorAuthMiddleware,SensorController.indexForSimulator); //Rota para serviço de sensores listar todos os sensores (simulação)
+
 
 routes.use(AuthenticationMiddleware); // Todas rotas abaixo exigem autenticação
 
