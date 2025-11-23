@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const { upload } = require("./configs/multer");
 
 // Middlewares
 const schemaValidator = require("./apps/middlewares/schemaValidator");
@@ -16,6 +17,7 @@ const SensorController = require("./apps/controllers/SensorControllers");
 const LeituraController = require("./apps/controllers/LeituraControllers");
 const AlertaController = require("./apps/controllers/AlertaControllers");
 const CalibragemController = require("./apps/controllers/CalibragemControllers");
+const FileController = require("./apps/controllers/FileController");
 
 // Schemas
 const authSchema = require("./schema/auth.schema.json");
@@ -108,6 +110,7 @@ routes.get("/calibrations",typeVerifyMiddleware("admin","tecnico"), CalibragemCo
 routes.get("/calibrations/:id_tecnico/:id_sensor",typeVerifyMiddleware("admin","tecnico"), CalibragemController.show); //Pega os dados de uma calibragem específica
 routes.delete("/calibrations/:id_tecnico/:id_sensor", typeVerifyMiddleware("admin","tecnico"), CalibragemController.delete); //Deleta uma calibragem específica (admin, tecnico)
 
-
+//Rota para upload de arquivo 
+routes.post("/upload", upload.single('file'), FileController.upload); 
 
 module.exports = routes;

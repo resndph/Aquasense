@@ -11,6 +11,9 @@
     "descricao": {
       "type": "string",
       "minLength": 3
+    },
+        "arquivo_anexo": {
+      "type": "string"
     }
   },
   "additionalProperties": false

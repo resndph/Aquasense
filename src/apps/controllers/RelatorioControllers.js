@@ -21,6 +21,7 @@ class RelatorioController {
       alerta_analisado,
       titulo,
       descricao,
+      arquivo_anexo,
       acoes_corretivas
     } = req.body;
 
@@ -62,6 +63,7 @@ class RelatorioController {
       pesquisador_resp,
       alerta_analisado,
       titulo,
+      arquivo_anexo: arquivo_anexo || null,
       descricao,
     }, { transaction });
 
@@ -129,7 +131,7 @@ class RelatorioController {
     const transaction = await sequelize.transaction();
     try {
       const { id } = req.params;
-      const { titulo, descricao } = req.body;
+      const { titulo, descricao, arquivo_anexo } = req.body;
 
       const relatorio = await Relatorio.findOne({
         where: { id_relatorio: id },
@@ -144,6 +146,7 @@ class RelatorioController {
       await Relatorio.update({
         titulo: titulo || relatorio.titulo,
         descricao: descricao || relatorio.descricao,
+        arquivo_anexo: arquivo_anexo || relatorio.arquivo_anexo 
       }, {
         where: { id_relatorio: id },
         transaction

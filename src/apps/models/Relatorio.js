@@ -13,6 +13,7 @@ class Relatorio extends Model {
         alerta_analisado: DataTypes.INTEGER,
         titulo: DataTypes.STRING(100),
         descricao: DataTypes.TEXT,
+        arquivo_anexo: DataTypes.STRING,
         data_emissao: {
           type: DataTypes.DATE,
           defaultValue: DataTypes.NOW,

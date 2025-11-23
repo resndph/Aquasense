@@ -16,6 +16,9 @@
       "type": "string",
       "minLength": 3
     },
+    "arquivo_anexo": {
+      "type": "string"
+    },
     "acoes_corretivas": {
       "type": "array",
       "items": {

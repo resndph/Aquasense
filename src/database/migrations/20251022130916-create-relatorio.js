@@ -43,6 +43,10 @@ module.exports = {
           notEmpty: true,
         },
       },
+      arquivo_anexo: {
+        type: Sequelize.STRING(255),
+        allowNull: true, 
+      },
       data_emissao: {
         type: Sequelize.DATE,
         allowNull: false,
