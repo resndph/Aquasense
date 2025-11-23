@@ -57,7 +57,7 @@ async function sendReading(id_sensor, valor) {
 }
 
 function generateRandomValue(sensor) {
-  return Number((Math.random() * (sensor.limite + 1)).toFixed(2));
+  return Number((Math.random() * (sensor.limite + 20)).toFixed(2));
 }
 
 async function loop() {
