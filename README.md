@@ -1,7 +1,5 @@
 # 💧 API - Sistema de Monitoramento da Qualidade da Água
 
-Projeto desenvolvido no ecossistema da **COMP Júnior - UFLA**.
-
 ## 📘 Contexto da API
 
 A ideia deste sistema surgiu da necessidade de automatizar a análise da qualidade da água em bebedouros da universidade, substituindo processos manuais de coleta e checagem. O projeto consiste em uma API estruturada em Node.js (Express + Sequelize) que simula e gerencia um ambiente onde técnicos e pesquisadores monitoram estações equipadas com sensores automáticos. 
