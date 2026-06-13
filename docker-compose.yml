@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   mysqlcontainer:
     image: mysql:8.0
@@ -15,11 +13,20 @@ services:
     command: >
       --default-authentication-plugin=mysql_native_password
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      # Modificado para usar 127.0.0.1, garantindo que o ping responda sem falhas de rede interna
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-proot"]
       interval: 5s
       timeout: 3s
-      retries: 20
+      retries: 10
       start_period: 10s
+      
+  jaeger:
+    image: jaegertracing/all-in-one:1.57
+    container_name: jaegercontainer
+    restart: always
+    ports:
+      - "16686:16686" # Interface Web
+      - "4318:4318"   # Recebimento de traces OTLP via HTTP
 
   apicontainer:
     build: .
@@ -32,11 +39,13 @@ services:
     ports:
       - "3000:3000"
     working_dir: /app
+    # Executa a migração e injeta o OpenTelemetry na inicialização do servidor
     command: >
       sh -c "
         npx sequelize-cli db:migrate &&
-        yarn start
+        NODE_OPTIONS='--require ./instrumentation.js' yarn start
       "
+
   sensor-simulator:
     build: ./sensor-simulator
     container_name: sensor-simulator
@@ -45,5 +54,6 @@ services:
     env_file:
       - ./sensor-simulator/.env
     restart: always
+
 volumes:
   mysql_data:
