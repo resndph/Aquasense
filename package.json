@@ -8,6 +8,9 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "@opentelemetry/auto-instrumentations-node": "^0.77.0",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.219.0",
+    "@opentelemetry/sdk-node": "^0.219.0",
     "backblaze-b2": "^1.7.1",
     "bcryptjs": "^3.0.3",
     "dotenv": "^17.2.3",
